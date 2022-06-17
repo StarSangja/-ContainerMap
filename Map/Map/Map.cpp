@@ -1,46 +1,105 @@
-// ** ContainerMap v0.2
+// ** ContainerMap v0.3
 #include <iostream>
 #include <string>
+#include <list>
 #include <map>
 
 using namespace std;
 
-// ** <key 값, Value 값>
-map<int, int> Number;
+struct Vector3
+{
+	float x, y, z;
 
-void AddData(int _Key, int _Value);
+	Vector3() : x(0.0f), y(0.0f), z(0.0f) {};
+
+	Vector3(const float& _x, const float& _y)
+		: x(_x), y(_y), z(0.0f) {};
+
+	Vector3(const float& _x, const float& _y, const float& _z)
+		: x(_x), y(_y), z(_z) {};
+};
+
+struct Trasnform
+{
+	Vector3 Position;
+	Vector3 Rotation;
+	Vector3 Scale;
+};
+
+struct Object
+{
+	Trasnform Info;
+
+	Object() {};
+
+	Object(const Trasnform& _Info) : Info(_Info) {};
+};
+
+struct Player : public Object
+{
+
+	Player() {};
+
+	Player(const Trasnform& _Info) : Object(_Info) {};
+};
+
+// ** <key 값, Value 값>
+map<string, list<Object*>> Objects;
+
+
+
+void Initialize();
+void AddObject(string _Key, Object* _Object);
 
 
 int main(void)
 {
+	//Initialize();
+	Trasnform Info;
 
-	Number[0] = 0;
-	Number[1] = 10;
-	Number[2] = 20;
-	Number.insert(make_pair(3, 30));
-	//Number[3] = 30;
+	Info.Position.x = 10;
+	Info.Position.y = 20;
+	Info.Position.z = 30;
 
-	Number[1] = 100;
+	AddObject("Player", new Player(Info));
 
-	Number.insert(make_pair(4, 40));
 	
 
-	AddData(2, 200);
-
-	/*
-	* for (int i = 0; i < 5; ++i)
-	{
-		cout << Number[i] << endl;
-	}
-
-	*/
+	//cout << Objects["Player"]->Info.Position.x << endl;
+	//cout << Objects["Player"]->Info.Position.y << endl;
+	//cout << Objects["Player"]->Info.Position.z << endl;
 	
-
-	for (map<int, int>::iterator iter = Number.begin();
-	iter != Number.end(); ++iter)
-	cout << iter->second << endl;
 
 	return 0;
+}
+
+void Initialize()
+{
+	Trasnform Info;
+
+	Info.Position.x = 10;
+	Info.Position.y = 20;
+	Info.Position.z = 30;
+
+	//Objects["Player"] = new Player(Info);
+}
+
+
+void AddObject(string _Key, Object* _Object)
+{
+	// ** find: 키값 검색
+	map<string, list<Object*>>::iterator iter = Objects.find(_Key);
+
+	// ** insert: 입력, make_pair: 값 덮어쓰기(Key 값, Value 값)
+	if (iter == Objects.end())
+	{
+		list<Object*> Temp;
+		Temp.push_back(_Object);
+		Objects.insert(make_pair(_Key, Temp));
+	}
+
+	else
+		iter->second.push_back(_Object);
 }
 
 #pragma region ** ContainerMap v0.1
@@ -154,16 +213,3 @@ return 0;
 
 
 #pragma endregion
-
-void AddData(int _Key, int _Value)
-{
-	// ** find: 키값 검색
-	map<int, int>::iterator iter = Number.find(_Key);
-
-	// ** insert: 입력, make_pair: 값 덮어쓰기(Key 값, Value 값)
-	if (iter == Number.end())
-		Number.insert(make_pair(_Key, _Value));
-
-	else
-		iter->second = _Value;
-}
