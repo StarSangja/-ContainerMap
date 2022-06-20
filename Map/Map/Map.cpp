@@ -1,11 +1,10 @@
-// ** ContainerMap v0.4
+// ** ContainerMap v0.4 - 2
 #include <iostream>
 #include <string>
 #include <list>
 #include <map>
 
 using namespace std;
-
 
 struct Vector3
 {
@@ -25,10 +24,6 @@ struct Trasnform
 	Vector3 Rotation;
 	Vector3 Scale;
 };
-
-
-
-
 
 struct Object
 {
@@ -69,15 +64,10 @@ struct Boss : public Object
 	Boss(const Trasnform& _Info) : Object(_Info) {};
 };
 
-
-
-
 map<string, list<Object*>> Objects;
-
 
 void Initialize();
 void AddObject(string _Key, Object* _Object);
-
 
 int main(void)
 {
